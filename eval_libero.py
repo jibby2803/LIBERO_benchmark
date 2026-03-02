@@ -3,7 +3,7 @@ import os
 import sys 
 
 sys.path.insert(0, "/mnt/data/sftp/data/vla_intern/workspace/binh/2026/evaluation_setup/libero_benchmark")
-sys.path.insert(0, "/mnt/data/sftp/data/vla_intern/workspace/binh/2026/gr16_distil/Gr00tN1.6_distil")
+sys.path.insert(0, "/mnt/data/sftp/data/vla_intern/workspace/binh/2026/prunner/EO1_prunner")
 
 
 import collections
@@ -29,8 +29,8 @@ from concurrent.futures import ProcessPoolExecutor, as_completed
 # from evaluation.pi0_infer.pi0_inference import Pi0_inference
 # from evaluation.smolvla_infer.smolvla_inference import SmolVLA_inference
 
-from evaluation.gr00tn16_infer.gr00tn16_inference import Gr00tn16_inference
-
+# from evaluation.gr00tn16_infer.gr00tn16_inference import Gr00tn16_inference
+from experiments.ipec_libero.evaluation.eo1_infer.eo1_inference import EO1_inference
 
 LIBERO_DUMMY_ACTION = [0.0] * 6 + [-1.0]
 LIBERO_ENV_RESOLUTION = 256  # resolution used to render training data
@@ -139,6 +139,9 @@ def eval_libero(args: Args, task_suite_name:str=None) -> None:
             logging.info(f"Task {args.task_suite_name} | Successfully {args.model_type} loaded policy")
         elif args.model_type=="gr00tn16":
             mypolicy = Gr00tn16_inference(args.pretrained_model_path, args.infer_chunk)
+            logging.info(f"Task {args.task_suite_name} | Successfully {args.model_type} loaded policy")
+        elif args.model_type=="eo1":
+            mypolicy = EO1_inference(args.pretrained_model_path, args.infer_chunk)
             logging.info(f"Task {args.task_suite_name} | Successfully {args.model_type} loaded policy")
         else:
             print(f"{args.model_type} is not supported yet")
@@ -252,10 +255,10 @@ def eval_libero_all(args:Args):
         futures = {pool.submit(eval_libero, args, task): task for task in tasks}
         for fut in as_completed(futures):
             task = futures[fut]
-            try:
-                results[task] = fut.result()
-            except Exception as e:
-                print(f"[ERROR] Task '{task}' failed: {e}")
+            # try:
+            results[task] = fut.result()
+            # except Exception as e:
+                # print(f"[ERROR] Task '{task}' failed: {e}")
 
     print("All done. Results:", results)
 
