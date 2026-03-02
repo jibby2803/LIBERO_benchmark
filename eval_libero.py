@@ -3,7 +3,7 @@ import os
 import sys 
 
 sys.path.insert(0, "/mnt/data/sftp/data/vla_intern/workspace/binh/2026/evaluation_setup/libero_benchmark")
-sys.path.insert(0, "/mnt/data/sftp/data/vla_intern/workspace/binh/2026/prunner/VLA_layer_prunner")
+sys.path.insert(0, "/mnt/data/sftp/data/vla_intern/workspace/binh/2026/gr16_distil/Gr00tN1.6_distil")
 
 
 import collections
@@ -26,8 +26,11 @@ from concurrent.futures import ProcessPoolExecutor, as_completed
 
 
 # from myutils.pi0_infer import Pi0TorchInference, normalize_gripper_action, invert_gripper_action
-from evaluation.pi0_infer.pi0_inference import Pi0_inference
-from evaluation.smolvla_infer.smolvla_inference import SmolVLA_inference
+# from evaluation.pi0_infer.pi0_inference import Pi0_inference
+# from evaluation.smolvla_infer.smolvla_inference import SmolVLA_inference
+
+from evaluation.gr00tn16_infer.gr00tn16_inference import Gr00tn16_inference
+
 
 LIBERO_DUMMY_ACTION = [0.0] * 6 + [-1.0]
 LIBERO_ENV_RESOLUTION = 256  # resolution used to render training data
@@ -134,6 +137,9 @@ def eval_libero(args: Args, task_suite_name:str=None) -> None:
         elif args.model_type=="smolvla":
             mypolicy = SmolVLA_inference(args.pretrained_model_path, args.infer_chunk)
             logging.info(f"Task {args.task_suite_name} | Successfully {args.model_type} loaded policy")
+        elif args.model_type=="gr00tn16":
+            mypolicy = Gr00tn16_inference(args.pretrained_model_path, args.infer_chunk)
+            logging.info(f"Task {args.task_suite_name} | Successfully {args.model_type} loaded policy")
         else:
             print(f"{args.model_type} is not supported yet")
             pass
@@ -207,11 +213,13 @@ def eval_libero(args: Args, task_suite_name:str=None) -> None:
                 pathlib.Path(f"{str(save_video_dir)}") / f"rollout_seed_{args.seed}_trial_{episode_idx}_wrist_{str(task_description)}_{suffix}.mp4",
                 [np.asarray(x) for x in replay_images_wrist],
                 fps=10,
+                codec="libx264",
             )
             imageio.mimwrite(
                 pathlib.Path(f"{str(save_video_dir)}") / f"rollout_seed_{args.seed}_trial_{episode_idx}_static_{str(task_description)}_{suffix}.mp4",
                 [np.asarray(x) for x in replay_images],
                 fps=10,
+                codec="libx264"
             )
   
         # Log current results
