@@ -1,0 +1,5 @@
+assets: /mnt/data/sftp/data/vla_intern/workspace/binh/2026/evaluation_setup/libero_benchmark/libero/libero/assets
+bddl_files:  /mnt/data/sftp/data/vla_intern/workspace/binh/2026/evaluation_setup/libero_benchmark/libero/libero/bddl_files
+benchmark_root: /mnt/data/sftp/data/vla_intern/workspace/binh/2026/evaluation_setup/libero_benchmark/libero/libero
+datasets: /mnt/data/sftp/data/vla_intern/workspace/binh/2026/evaluation_setup/libero_benchmark/libero/libero/datasets
+init_states: /mnt/data/sftp/data/vla_intern/workspace/binh/2026/evaluation_setup/libero_benchmark/libero/libero/init_files
